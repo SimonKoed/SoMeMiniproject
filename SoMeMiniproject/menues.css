@@ -4,11 +4,6 @@
 	padding-left: 15px;
 }
 
-img {
-	padding-left: 25em;
-	vertical-align: top;
-}
-
 .title{
 	padding-top: 50px;
 	font-size: 1.3em;
@@ -27,4 +22,17 @@ img {
 	color: #5ED823;
 }
 
+.breadtext {
+	font-family: "Times New Roman";
+	float: left;
+	margin-top: 2em;
+	margin-left: 14em;
+	font-size: 1.8em;
+}
+
+.breadtitle {
+	font-family: "Comic Sans MS";
+	font-size: 1.5em;
+	color: #F9B2DA;
+}
 
