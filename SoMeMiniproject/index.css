@@ -5,8 +5,9 @@
 }
 
 img {
+	display: flex;
+	justify-content: center;
 	padding-left: 25em;
-	vertical-align: top;
 }
 
 .title{
