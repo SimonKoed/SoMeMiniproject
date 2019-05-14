@@ -1,70 +1,129 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
+/*
+nodemon server.js ----- to start the server
+*/
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+const express = require('express');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt-nodejs');
+//const cors = require('cors');
 
-var ingredients = [
+
+const app = express();
+
+app.use(bodyParser.json())
+//app.use(cors());
+
+const database = {
+	users: [ // array of objects
+		{
+			id: '123',
+			name: 'John',
+			email: 'john@gmail.com',
+			password: '1234',
+			entries: 0, // how many times something has been done by the user
+			joined: new Date() // will be used whenever it is run
+		},
+		{
+			id: '124',
+			name: 'Sally',
+			email: 'sally@gmail.com',
+			password: '4321',
+			entries: 0, // how many times something has been done by the user
+			joined: new Date() // will be used whenever it is run
+		}
+	],
+	login: [
 	{
-		"id": "12345",
-		"text": "Eggs"
-	},
-	{
-		"id": "78945",
-		"text": "Milk bitch"
-	},
-	{
-		"id": "48953",
-		"text": "honey"
-	},
-	{
-		"id": "48956",
-		"text": "nuts"
-	},
-];
-
-app.get('/ingredients', (req, res) => { /* '/' represents the base URL */
-	res.send(ingredients);
-});
-
-app.get('/funions', (req, res) => {
-	res.send('Give some funions you fucker');
-});
-
-app.post('/ingredients', (req, res) => {
-	var ingredient = req.body;
-	if(!ingredient || ingredient.text === "") {
-		res.status(500).send({error: "Your ingredient must have text"});
-	} else {
-		ingredients.push(ingredient);
-		res.status(200).send(ingredients);
+		id: '987',
+		hash: '',
+		email: 'john@gmail.com'
 	}
-});
+	]
+}
 
-app.put('/ingredients/:ingredientId', (req, res) => { /* updating information. ingredientId is a parameter that takes on the value specified by the user */
-	var newText = req.body.text; /* Sets the var to be equal to the user defined ingredient */
+app.get('/', (req, res) => {
+	res.send(database.users);
+})
 
-	if(!newText || newText ==="") { /* if statement to make sure the input from the user is valid */
-		res.status(500).send({error: "You must provide ingredient text"}); /* Sends an error message if input is invalid */
+
+// json (feature for 'response') instead of send has some extra features
+app.post('/signin', (req, res) => {
+	bcrypt.compare("bacon", hash, function(err, res) {
+	// res = true
+})
+
+	bcrypt.compare("bacon", hash, function(err, res) {
+	// res = false
+})
+
+	if(req.body.email === database.users[0].email && req.body.password === database.users[0].password) {
+		res.json('Success');
 	} else {
-			for(var x = 0; x < ingredients.length; x++) { /* Goes through the list of ingredients */
-				var ing = ingredients[x];
-
-				if(ing.id === req.params.ingredientId) { /* Checks if it is the right ingredient */
-					ingredients[x].text = newText; /* Changes the text of the ingredient to the user input */
-					break;
-				}
-			}
-
-			res.send(ingredients); /* Sends the ingredient list to the website */
+		res.status(400).json('error logging in');
 	}
+})
+
+app.post('/register', (req, res) => {
+	const {email, name, password} = req.body;
+	bcrypt.hash(password, null, null, function(err, hash) {
+		console.log(hash);
+	})
+
+	database.users.push(		{
+			id: '125',
+			name: name,
+			email: email,
+			password: password,
+			entries: 0, // how many times something has been done by the user
+			joined: new Date() // will be used whenever it is run
+		})
+		res.json(database.users[database.users.length-1]); // returns the last member of the users array			
+})
 
 
-});
+app.get('/profile/:id', (req, res) => {
+	const {id} = req.params; // sets the id variable to be equal to the input
+	let found = false;
+
+	database.users.forEach(user => {
+		if(user.id === id) {
+			found = true;
+			return res.json(user);
+		} 
+	})
+	if(!found) {
+		res.status(400).json('not found');
+	}
+})
+
+
+app.put('/image', (req, res) => {
+		const {id} = req.body; // sets the id variable to be equal to the input
+	let found = false;
+
+	database.users.forEach(user => {
+		if(user.id === id) {
+			found = true;
+			user.entries++;
+			return res.json(user.entries);
+		} 
+	})
+		if(!found) {
+		res.status(400).json('image not found');
+	}
+})
+
+
+bcrypt.hash("bacon", null, null, function(err, hash) {
+
+})
+
+
+
+
 
 app.listen(3000, function() { /* Listens for a server on the port 3000 */
-	console.log("First API running on port 3000");
+	console.log("app is running on port 3000");
 });
 
-var numberOfIntegers 
+
