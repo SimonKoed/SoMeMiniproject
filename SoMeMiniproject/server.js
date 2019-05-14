@@ -4,7 +4,6 @@ nodemon server.js ----- to start the server
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt-nodejs');
 //const cors = require('cors');
 
 
@@ -12,6 +11,11 @@ const app = express();
 
 app.use(bodyParser.json())
 //app.use(cors());
+
+app.use((req, res, next) => {
+	console.log('<h1>HHHHHEEEEEEELLLOOOO</h1>');
+	next();
+})
 
 const database = {
 	users: [ // array of objects
@@ -42,19 +46,13 @@ const database = {
 }
 
 app.get('/', (req, res) => {
-	res.send(database.users);
+	//res.send(database.users);
+	res.send('TESTTEST');
 })
 
 
 // json (feature for 'response') instead of send has some extra features
 app.post('/signin', (req, res) => {
-	bcrypt.compare("bacon", hash, function(err, res) {
-	// res = true
-})
-
-	bcrypt.compare("bacon", hash, function(err, res) {
-	// res = false
-})
 
 	if(req.body.email === database.users[0].email && req.body.password === database.users[0].password) {
 		res.json('Success');
@@ -65,9 +63,6 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
 	const {email, name, password} = req.body;
-	bcrypt.hash(password, null, null, function(err, hash) {
-		console.log(hash);
-	})
 
 	database.users.push(		{
 			id: '125',
@@ -98,7 +93,7 @@ app.get('/profile/:id', (req, res) => {
 
 
 app.put('/image', (req, res) => {
-		const {id} = req.body; // sets the id variable to be equal to the input
+	const {id} = req.body; // sets the id variable to be equal to the input
 	let found = false;
 
 	database.users.forEach(user => {
@@ -114,15 +109,7 @@ app.put('/image', (req, res) => {
 })
 
 
-bcrypt.hash("bacon", null, null, function(err, hash) {
-
-})
-
-
-
-
-
-app.listen(3000, function() { /* Listens for a server on the port 3000 */
+app.listen(3001, function() { /* Listens for a server on the port 3000 */
 	console.log("app is running on port 3000");
 });
 
