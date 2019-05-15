@@ -51,26 +51,25 @@ app.get('/', (req, res) => {
 // Think that this thing is actually not nescessary. '/profile/:id' can return the user which i guess is all we really need to do
 app.post('/signin', (req, res) => {
 
-	database.users.forEach(user => {
-	 	if(req.body.email === database.users.email && req.body.password === database.users.password) {
+	 	if(req.body.email === database.users[0].email && req.body.password === database.users.password[0]) {
 		res.json('Success');
 	} else {
 		res.status(400).json('error logging in');
 	}
-	})
 })
 
 app.post('/register', (req, res) => {
 	const {email, name, password} = req.body;
+	var id = "125"; // add this id to the angular an make it increase by one every time a user is created. It does not work to it here, since it will always be set back to 125
 
 	database.users.push(		{
-			id: '125',
+			id: id,
 			name: name,
 			email: email,
 			password: password,
 			joined: new Date() // will be used whenever it is run
 		})
-		res.json(database.users[database.users.length-1]); // returns the last member of the users array			
+		res.json(database.users[database.users.length-1]); // returns the last member of the users array		
 })
 
 
@@ -79,7 +78,7 @@ app.get('/profile/:id', (req, res) => {
 	let found = false;
 
 	database.users.forEach(user => {
-		if(user.id === id) {
+		if(user.id === id ) {
 			found = true;
 			return res.json(user);
 		} 
@@ -108,7 +107,7 @@ app.put('/image', (req, res) => {
 
 
 app.listen(3001, function() { /* Listens for a server on the port 3000 */
-	console.log("app is running on port 3000");
+	console.log("app is running on port 3001");
 });
 
 
